@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { GAME_CONFIG } from "@/features/game/constants/gameConfig";
 import { Button } from "@/features/game/components/Button";
+import { AmbientBackdrop } from "@/features/game/components/AmbientBackdrop";
 
 const REPO_URL = "https://github.com/Avery-techdev/sky-catcher";
 
@@ -71,23 +72,25 @@ export function InstructionsSlider({
   return (
     <section
       aria-label="Instructions"
-      className="animate-fade-in flex h-full flex-col items-center justify-center gap-8 overflow-y-auto px-6 py-8 text-center sm:gap-10"
+      className="animate-fade-in relative flex h-full flex-col items-center justify-center gap-8 overflow-y-auto px-6 py-8 text-center sm:gap-10"
     >
-      <div className="flex flex-col items-center gap-3">
+      <AmbientBackdrop />
+
+      <div className="relative z-10 flex flex-col items-center gap-4">
         <span
           aria-hidden="true"
-          className="text-4xl font-semibold tracking-tight sm:text-5xl"
+          className="flex items-center text-4xl tracking-tight sm:text-5xl"
         >
-          Sky
-          <span className="text-accent">·</span>
-          Catcher
+          <span className="font-normal">Sky</span>
+          <span className="animate-title-dot mx-2 inline-block h-2.5 w-2.5 rounded-full bg-accent sm:h-3 sm:w-3" />
+          <span className="font-bold">Catcher</span>
         </span>
-        <span className="text-xs font-medium tracking-[0.3em] text-ink-muted uppercase">
+        <span className="text-sm font-semibold tracking-[0.4em] text-ink-muted uppercase sm:text-base">
           Catch what falls
         </span>
       </div>
 
-      <div className="w-full max-w-md rounded-3xl border border-line bg-paper p-8 shadow-[0_30px_70px_-50px_rgba(10,10,10,0.5)]">
+      <div className="relative z-10 w-full max-w-md rounded-3xl border border-line bg-paper p-8 shadow-[0_30px_70px_-50px_rgba(10,10,10,0.35)]">
         <div key={index} className="animate-rise-in">
           <h2 className="text-xl font-semibold tracking-tight">
             {slide.title}
@@ -127,11 +130,13 @@ export function InstructionsSlider({
         </div>
       </div>
 
-      <Button variant="primary" onClick={onStart}>
-        Start game
-      </Button>
+      <div className="relative z-10">
+        <Button variant="primary" onClick={onStart}>
+          Start game
+        </Button>
+      </div>
 
-      <div className="flex flex-col items-center gap-1">
+      <div className="relative z-10 flex flex-col items-center gap-1">
         <span className="text-sm text-ink-muted">by Avery Hauschild</span>
         <a
           href={REPO_URL}

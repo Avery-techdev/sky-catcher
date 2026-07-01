@@ -54,8 +54,8 @@ export function SkyCatcherGame(): React.JSX.Element {
   const isActive = isCountdown || isPlaying || isPaused;
 
   return (
-    <div className="flex min-h-dvh items-stretch justify-center bg-paper sm:items-center sm:p-6">
-      <main className="relative flex h-dvh w-full max-w-4xl flex-col overflow-hidden bg-paper sm:h-[min(88dvh,780px)] sm:rounded-4xl sm:border sm:border-line sm:shadow-[0_50px_120px_-60px_rgba(10,10,10,0.5)]">
+    <div className="flex min-h-dvh items-stretch justify-center bg-canvas sm:items-center sm:p-6">
+      <main className="relative flex h-dvh w-full max-w-4xl flex-col overflow-hidden bg-canvas sm:h-[min(88dvh,780px)] sm:rounded-4xl sm:border sm:border-line sm:shadow-[0_50px_120px_-60px_rgba(10,10,10,0.5)]">
         <h1 className="sr-only">Sky-Catcher</h1>
 
         {status === GAME_STATUS.Start && (

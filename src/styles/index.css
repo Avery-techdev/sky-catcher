@@ -6,10 +6,11 @@
  * exclusively for interaction/feedback. Breakpoints are mobile-first.
  */
 @theme {
+  --color-canvas: #f8f8f8;
   --color-paper: #ffffff;
   --color-ink: #0a0a0a;
   --color-ink-muted: #6b7280;
-  --color-line: #eceef1;
+  --color-line: #e5e5e5;
   --color-accent: #3b5bff;
 
   --font-sans:
@@ -23,6 +24,9 @@
   --animate-dialog-in: dialog-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-count-pop: count-pop 400ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
   --animate-score-gain: score-gain 750ms ease-out both;
+  --animate-score-fade: score-fade 340ms ease-out both;
+  --animate-title-dot: title-dot 2.6s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  --animate-catch-flash: catch-flash 480ms ease-out both;
 }
 
 @keyframes fade-in {
@@ -96,6 +100,62 @@
   }
 }
 
+/* Brief accent tint + fade when the score changes (i.e. on a catch). */
+@keyframes score-fade {
+  0% {
+    opacity: 0.35;
+    color: var(--color-accent);
+  }
+  100% {
+    opacity: 1;
+    color: var(--color-ink);
+  }
+}
+
+/* Falling dot in the wordmark: drops in, tiny settle, holds, repeats. */
+@keyframes title-dot {
+  0% {
+    transform: translateY(-8px);
+    opacity: 0.2;
+  }
+  22% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  30% {
+    transform: translateY(-2px);
+  }
+  40% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Blue ripple at the catch line when an object is caught. */
+@keyframes catch-flash {
+  0% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+}
+
+/* Ambient background shapes drifting slowly downward. */
+@keyframes drift-fall {
+  from {
+    transform: translateY(-60px) rotate(0deg);
+  }
+  to {
+    transform: translateY(860px) rotate(40deg);
+  }
+}
+
 :root {
   color-scheme: light;
 }
@@ -108,7 +168,7 @@ body,
 
 body {
   margin: 0;
-  background-color: var(--color-paper);
+  background-color: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;

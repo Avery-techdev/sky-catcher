@@ -86,7 +86,11 @@ export function ModalDialog({
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="animate-dialog-in relative w-full max-w-sm rounded-[1.75rem] border border-line bg-paper p-8 text-center shadow-[0_40px_100px_-40px_rgba(10,10,10,0.6)] focus:outline-none"
+        className="animate-dialog-in relative w-full max-w-sm rounded-[1.75rem] border border-line p-8 text-center shadow-[0_40px_100px_-40px_rgba(10,10,10,0.6)] focus:outline-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at top, #ffffff 0%, #f4f4f4 100%)",
+        }}
       >
         <h2
           id={titleId}

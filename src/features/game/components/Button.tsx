@@ -25,7 +25,7 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   ghost: "text-ink-muted hover:text-ink",
 };
 
-/** Accessible text button with an explicit type and visible focus ring. */
+/** Text button with an explicit type and visible focus ring. */
 export function Button({
   children,
   onClick,
