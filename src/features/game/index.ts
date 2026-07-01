@@ -4,6 +4,7 @@
  * External code must import exclusively from this barrel — internal files
  * (components, hooks, services, constants, types) are private.
  */
+export { SkyCatcherGame } from "@/features/game/components/SkyCatcherGame";
 export { useGameState } from "@/features/game/hooks/useGameState";
 export { GAME_CONFIG } from "@/features/game/constants/gameConfig";
 export {
