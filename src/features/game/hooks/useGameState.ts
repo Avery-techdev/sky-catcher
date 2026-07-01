@@ -7,6 +7,7 @@
  */
 import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import { GAME_CONFIG } from "@/features/game/constants/gameConfig";
+import { gameStorageService } from "@/features/game/services/gameStorageService";
 import {
   FALLING_OBJECT_TYPE,
   GAME_STATUS,
@@ -73,10 +74,8 @@ function createSpawn(state: GameState, nextId: number): FallingObject {
 }
 
 export function useGameState(): UseGameStateResult {
-  const [state, dispatch] = useReducer(
-    gameReducer,
-    getIsMobile(),
-    createInitialState,
+  const [state, dispatch] = useReducer(gameReducer, undefined, () =>
+    createInitialState(getIsMobile(), gameStorageService.getHighscore()),
   );
 
   // Latest-state ref so the animation loop reads current values without
@@ -129,6 +128,13 @@ export function useGameState(): UseGameStateResult {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Sync the highscore to storage whenever it changes (external system sync).
+  useEffect(() => {
+    if (state.highscore > 0) {
+      gameStorageService.saveHighscore(state.highscore);
+    }
+  }, [state.highscore]);
+
   const startGame = useCallback((): void => dispatch({ type: "START" }), []);
   const pauseGame = useCallback((): void => dispatch({ type: "PAUSE" }), []);
   const resumeGame = useCallback((): void => dispatch({ type: "RESUME" }), []);
@@ -166,6 +172,7 @@ export function useGameState(): UseGameStateResult {
   return {
     status: state.status,
     score: state.score,
+    highscore: state.highscore,
     lives: state.lives,
     catcherPosition: state.catcherPosition,
     fallingObjects: state.fallingObjects,

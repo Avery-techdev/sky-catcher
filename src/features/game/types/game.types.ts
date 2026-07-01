@@ -40,6 +40,8 @@ export interface FallingObject {
 export interface GameState {
   readonly status: GameStatus;
   readonly score: number;
+  /** Best score across runs; persisted via the storage service. */
+  readonly highscore: number;
   readonly lives: number;
   /** Catcher center in percent of play area width. */
   readonly catcherPosition: number;
@@ -66,6 +68,8 @@ export interface GameControls {
 export interface UseGameStateResult extends GameControls {
   readonly status: GameStatus;
   readonly score: number;
+  /** Best score persisted across runs (via the storage service). */
+  readonly highscore: number;
   readonly lives: number;
   readonly catcherPosition: number;
   readonly fallingObjects: readonly FallingObject[];

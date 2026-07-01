@@ -26,11 +26,18 @@ export type GameAction =
       readonly spawn: FallingObject | null;
     };
 
-/** Build a fresh state for the given viewport profile (status: Start). */
-export function createInitialState(isMobile: boolean): GameState {
+/**
+ * Build a fresh run for the given viewport profile (status: Start). The
+ * highscore is carried in so it survives resets/restarts.
+ */
+export function createInitialState(
+  isMobile: boolean,
+  highscore = 0,
+): GameState {
   return {
     status: GAME_STATUS.Start,
     score: 0,
+    highscore,
     lives: GAME_CONFIG.livesStart,
     catcherPosition: GAME_CONFIG.catcher.startPosition,
     fallingObjects: [],
@@ -120,6 +127,7 @@ function advance(
   return {
     ...state,
     score,
+    highscore: Math.max(state.highscore, score),
     lives: clampedLives,
     fallingObjects: remaining,
     status,
@@ -132,12 +140,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case "START":
     case "RESTART":
       return {
-        ...createInitialState(state.isMobile),
+        ...createInitialState(state.isMobile, state.highscore),
         status: GAME_STATUS.Playing,
       };
 
     case "RESET":
-      return createInitialState(state.isMobile);
+      return createInitialState(state.isMobile, state.highscore);
 
     case "PAUSE":
       return state.status === GAME_STATUS.Playing
