@@ -1,0 +1,179 @@
+/**
+ * Pure game logic: initial state, derived selectors, per-frame advancement and
+ * the reducer. Everything here is deterministic, randomness and timing are
+ * injected via actions (see useGameState), which keeps this module testable.
+ */
+import { GAME_CONFIG } from "@/features/game/constants/gameConfig";
+import { GAME_STATUS } from "@/features/game/types/game.types";
+import type {
+  FallingObject,
+  GameState,
+} from "@/features/game/types/game.types";
+
+/** Actions that drive the game state machine. */
+export type GameAction =
+  | { readonly type: "START" }
+  | { readonly type: "PAUSE" }
+  | { readonly type: "RESUME" }
+  | { readonly type: "RESTART" }
+  | { readonly type: "RESET" }
+  | { readonly type: "SET_CATCHER"; readonly position: number }
+  | { readonly type: "MOVE_CATCHER"; readonly delta: number }
+  | { readonly type: "SET_VIEWPORT"; readonly isMobile: boolean }
+  | {
+      readonly type: "TICK";
+      readonly dtMs: number;
+      readonly spawn: FallingObject | null;
+    };
+
+/** Build a fresh state for the given viewport profile (status: Start). */
+export function createInitialState(isMobile: boolean): GameState {
+  return {
+    status: GAME_STATUS.Start,
+    score: 0,
+    lives: GAME_CONFIG.livesStart,
+    catcherPosition: GAME_CONFIG.catcher.startPosition,
+    fallingObjects: [],
+    isMobile,
+  };
+}
+
+/** Difficulty level derived from the current score. */
+export function selectDifficultyLevel(state: GameState): number {
+  return Math.floor(state.score / GAME_CONFIG.difficulty.step);
+}
+
+/** Fall speed derived from score + viewport (never stored as state). */
+export function selectGameSpeed(state: GameState): number {
+  const { speed } = GAME_CONFIG;
+  const level = selectDifficultyLevel(state);
+  const base = state.isMobile ? speed.baseMobile : speed.baseDesktop;
+  const max = state.isMobile ? speed.maxMobile : speed.maxDesktop;
+  return Math.min(base + level * speed.increasePerLevel, max);
+}
+
+/** Spawn interval (ms) derived from score + viewport (never stored as state). */
+export function selectSpawnInterval(state: GameState): number {
+  const { spawnInterval } = GAME_CONFIG;
+  const level = selectDifficultyLevel(state);
+  const base = state.isMobile
+    ? spawnInterval.baseMobile
+    : spawnInterval.baseDesktop;
+  return Math.max(
+    base - level * spawnInterval.decreasePerLevel,
+    spawnInterval.min,
+  );
+}
+
+/** Clamp a catcher center position to the configured bounds. */
+export function clampCatcherPosition(position: number): number {
+  const { minPosition, maxPosition } = GAME_CONFIG.catcher;
+  return Math.max(minPosition, Math.min(maxPosition, position));
+}
+
+/**
+ * Advance one frame: move objects, resolve catches/misses, append a spawn.
+ * Frame-rate independent — movement scales by dt relative to the 60 fps frame.
+ */
+function advance(
+  state: GameState,
+  dtMs: number,
+  spawn: FallingObject | null,
+): GameState {
+  const { catchHalfWidth } = GAME_CONFIG.catcher;
+  const { catchLineY, missLineY } = GAME_CONFIG.field;
+  const frames =
+    Math.min(dtMs, GAME_CONFIG.maxFrameDeltaMs) / GAME_CONFIG.frameMs;
+  const speed = selectGameSpeed(state);
+
+  let score = state.score;
+  let lives = state.lives;
+  const remaining: FallingObject[] = [];
+
+  for (const object of state.fallingObjects) {
+    const y = object.y + speed * frames;
+
+    // Caught: reached the catch line while horizontally aligned with the catcher.
+    const isAligned =
+      Math.abs(object.x - state.catcherPosition) <= catchHalfWidth;
+    if (y >= catchLineY && isAligned) {
+      score += object.points;
+      continue;
+    }
+
+    // Missed: fell past the bottom without being caught.
+    if (y > missLineY) {
+      lives -= 1;
+      continue;
+    }
+
+    remaining.push({ ...object, y });
+  }
+
+  if (spawn) {
+    remaining.push(spawn);
+  }
+
+  const clampedLives = Math.max(0, lives);
+  const status = clampedLives <= 0 ? GAME_STATUS.GameOver : state.status;
+
+  return {
+    ...state,
+    score,
+    lives: clampedLives,
+    fallingObjects: remaining,
+    status,
+  };
+}
+
+/** Reducer for the game state machine. */
+export function gameReducer(state: GameState, action: GameAction): GameState {
+  switch (action.type) {
+    case "START":
+    case "RESTART":
+      return {
+        ...createInitialState(state.isMobile),
+        status: GAME_STATUS.Playing,
+      };
+
+    case "RESET":
+      return createInitialState(state.isMobile);
+
+    case "PAUSE":
+      return state.status === GAME_STATUS.Playing
+        ? { ...state, status: GAME_STATUS.Paused }
+        : state;
+
+    case "RESUME":
+      return state.status === GAME_STATUS.Paused
+        ? { ...state, status: GAME_STATUS.Playing }
+        : state;
+
+    case "SET_CATCHER":
+      return {
+        ...state,
+        catcherPosition: clampCatcherPosition(action.position),
+      };
+
+    case "MOVE_CATCHER":
+      return {
+        ...state,
+        catcherPosition: clampCatcherPosition(
+          state.catcherPosition + action.delta,
+        ),
+      };
+
+    case "SET_VIEWPORT":
+      return state.isMobile === action.isMobile
+        ? state
+        : { ...state, isMobile: action.isMobile };
+
+    case "TICK":
+      return state.status === GAME_STATUS.Playing
+        ? advance(state, action.dtMs, action.spawn)
+        : state;
+
+    default:
+      return state;
+  }
+}
