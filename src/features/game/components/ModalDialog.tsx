@@ -13,7 +13,7 @@ const FOCUSABLE_SELECTOR =
   'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
- * Accessible modal dialog: labelled by its title, traps focus while open,
+ * modal dialog: labelled by its title, traps focus while open,
  * restores focus to the trigger on close and dismisses on Escape.
  */
 export function ModalDialog({

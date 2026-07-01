@@ -18,27 +18,27 @@ export function PauseOverlay({
   onExit,
 }: PauseOverlayProps): React.JSX.Element {
   return (
-    <ModalDialog title="Pausiert" onClose={onResume}>
+    <ModalDialog title="Paused" onClose={onResume}>
       <dl className="mt-6 flex justify-center gap-8 text-sm">
         <div className="flex flex-col gap-1">
-          <dt className="text-ink-muted">Dein Score</dt>
+          <dt className="text-ink-muted">Score</dt>
           <dd className="text-2xl font-semibold tabular-nums">{score}</dd>
         </div>
         <div className="flex flex-col gap-1">
-          <dt className="text-ink-muted">Highscore</dt>
+          <dt className="text-ink-muted">Best</dt>
           <dd className="text-2xl font-semibold tabular-nums">{highscore}</dd>
         </div>
       </dl>
 
       <div className="mt-8 flex flex-col gap-3">
         <Button variant="primary" onClick={onResume}>
-          Fortsetzen
+          Resume
         </Button>
         <Button variant="secondary" onClick={onRestart}>
-          Nochmal spielen
+          Play again
         </Button>
         <Button variant="ghost" onClick={onExit}>
-          Zur Startseite
+          Back to start
         </Button>
       </div>
     </ModalDialog>

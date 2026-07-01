@@ -20,7 +20,9 @@ import type {
 import {
   createInitialState,
   gameReducer,
+  selectCatchHalfWidth,
   selectGameSpeed,
+  selectObjectWidth,
   selectSpawnInterval,
 } from "@/features/game/hooks/gameReducer";
 
@@ -95,7 +97,11 @@ export function useGameState(): UseGameStateResult {
 
     let frameId = 0;
     let lastTime = performance.now();
-    let spawnTimer = 0;
+    // Pre-load the timer so the first object appears shortly after play begins.
+    let spawnTimer = Math.max(
+      0,
+      selectSpawnInterval(stateRef.current) - GAME_CONFIG.spawn.firstDelayMs,
+    );
 
     const step = (now: number): void => {
       const dtMs = now - lastTime;
@@ -169,6 +175,8 @@ export function useGameState(): UseGameStateResult {
   // Derived values — computed from score + viewport, never stored as state.
   const gameSpeed = useMemo(() => selectGameSpeed(state), [state]);
   const spawnInterval = useMemo(() => selectSpawnInterval(state), [state]);
+  const catcherWidth = useMemo(() => selectCatchHalfWidth(state) * 2, [state]);
+  const objectWidth = useMemo(() => selectObjectWidth(state), [state]);
 
   return {
     status: state.status,
@@ -178,6 +186,8 @@ export function useGameState(): UseGameStateResult {
     lastCatchId: state.lastCatchId,
     lives: state.lives,
     catcherPosition: state.catcherPosition,
+    catcherWidth,
+    objectWidth,
     fallingObjects: state.fallingObjects,
     gameSpeed,
     spawnInterval,

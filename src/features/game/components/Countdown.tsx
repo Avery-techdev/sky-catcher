@@ -27,7 +27,7 @@ export function Countdown({ onComplete }: CountdownProps): React.JSX.Element {
     <div
       role="status"
       aria-live="polite"
-      aria-label={`Spiel startet in ${count}`}
+      aria-label={`Game starts in ${count}`}
       className="animate-fade-in absolute inset-0 z-40 flex items-center justify-center bg-paper/70 backdrop-blur-sm"
     >
       <span

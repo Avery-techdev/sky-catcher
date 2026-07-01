@@ -83,6 +83,10 @@ export interface UseGameStateResult extends GameControls {
   readonly lastCatchId: number;
   readonly lives: number;
   readonly catcherPosition: number;
+  /** Catcher width in percent of field width (device-tuned). */
+  readonly catcherWidth: number;
+  /** Falling object width in percent of field width (device-tuned). */
+  readonly objectWidth: number;
   readonly fallingObjects: readonly FallingObject[];
   /** Derived from score — fall speed in percent of height per reference frame. */
   readonly gameSpeed: number;

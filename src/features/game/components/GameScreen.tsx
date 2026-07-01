@@ -11,6 +11,8 @@ interface GameScreenProps {
   lives: number;
   livesTotal: number;
   catcherPosition: number;
+  catcherWidth: number;
+  objectWidth: number;
   fallingObjects: readonly FallingObject[];
   fieldRef: RefObject<HTMLDivElement | null>;
   onPause: () => void;
@@ -33,20 +35,19 @@ export function GameScreen({
   lives,
   livesTotal,
   catcherPosition,
+  catcherWidth,
+  objectWidth,
   fallingObjects,
   fieldRef,
   onPause,
 }: GameScreenProps): React.JSX.Element {
   return (
-    <section
-      aria-label="Spiel"
-      className="animate-fade-in flex h-full flex-col"
-    >
+    <section aria-label="Game" className="animate-fade-in flex h-full flex-col">
       <div className="flex items-center justify-between gap-4 px-5 py-4">
         <dl className="flex gap-7">
           <div className="flex flex-col">
             <dt className="text-[0.65rem] font-medium tracking-[0.2em] text-ink-muted uppercase">
-              Punkte
+              Score
             </dt>
             <dd className="relative w-fit text-2xl font-semibold tabular-nums">
               {score}
@@ -72,20 +73,28 @@ export function GameScreen({
         </dl>
 
         <div className="flex items-center gap-4">
-          <ul
-            className="flex gap-1.5"
-            aria-label={`${lives} von ${livesTotal} Leben`}
-          >
-            {Array.from({ length: livesTotal }, (_, index) => (
-              <li
-                key={`life-${index}`}
-                aria-hidden="true"
-                className={`h-2.5 w-2.5 rounded-full transition-colors duration-300 ${
-                  index < lives ? "bg-ink" : "bg-line"
-                }`}
-              />
-            ))}
-          </ul>
+          <div className="flex flex-col items-end">
+            <span
+              aria-hidden="true"
+              className="text-[0.65rem] font-medium tracking-[0.2em] text-ink-muted uppercase"
+            >
+              Lives
+            </span>
+            <ul
+              className="mt-1 flex gap-1.5"
+              aria-label={`${lives} of ${livesTotal} lives`}
+            >
+              {Array.from({ length: livesTotal }, (_, index) => (
+                <li
+                  key={`life-${index}`}
+                  aria-hidden="true"
+                  className={`h-2.5 w-2.5 rounded-full transition-colors duration-300 ${
+                    index < lives ? "bg-ink" : "bg-line"
+                  }`}
+                />
+              ))}
+            </ul>
+          </div>
 
           <button
             type="button"
@@ -128,7 +137,7 @@ export function GameScreen({
             style={{
               left: `${object.x}%`,
               top: `${object.y}%`,
-              width: `${GAME_CONFIG.object.widthPercent}%`,
+              width: `${objectWidth}%`,
             }}
           >
             <div className={SHAPE_CLASSES[object.type]} />
@@ -140,13 +149,13 @@ export function GameScreen({
           style={{
             left: `${catcherPosition}%`,
             top: `${GAME_CONFIG.field.catchLineY}%`,
-            width: `${GAME_CONFIG.catcher.catchHalfWidth * 2}%`,
+            width: `${catcherWidth}%`,
           }}
         />
       </div>
 
       <p className="sr-only" aria-live="polite">
-        Noch {lives} von {livesTotal} Leben
+        {lives} of {livesTotal} lives left
       </p>
     </section>
   );

@@ -76,6 +76,20 @@ export function selectSpawnInterval(state: GameState): number {
   );
 }
 
+/** Catcher half-width (percent of field) for the current viewport profile. */
+export function selectCatchHalfWidth(state: GameState): number {
+  return state.isMobile
+    ? GAME_CONFIG.catcher.catchHalfWidthMobile
+    : GAME_CONFIG.catcher.catchHalfWidthDesktop;
+}
+
+/** Object width (percent of field) for the current viewport profile. */
+export function selectObjectWidth(state: GameState): number {
+  return state.isMobile
+    ? GAME_CONFIG.object.widthPercentMobile
+    : GAME_CONFIG.object.widthPercentDesktop;
+}
+
 /** Clamp a catcher center position to the configured bounds. */
 export function clampCatcherPosition(position: number): number {
   const { minPosition, maxPosition } = GAME_CONFIG.catcher;
@@ -97,8 +111,7 @@ function advance(
   const speed = selectGameSpeed(state);
 
   // Catch on real horizontal overlap: catcher half-width + object half-width.
-  const catchReach =
-    GAME_CONFIG.catcher.catchHalfWidth + GAME_CONFIG.object.widthPercent / 2;
+  const catchReach = selectCatchHalfWidth(state) + selectObjectWidth(state) / 2;
 
   // Continuous catcher movement, integrated per frame for smooth motion.
   const catcherPosition = clampCatcherPosition(

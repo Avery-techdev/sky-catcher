@@ -6,8 +6,8 @@
  * (x: 0–100 across width, y: 0–100 down the height). This keeps the game logic
  * deterministic and free of DOM measurements.
  *
- * Names are role-based (catcher, standard, bonus) and design-agnostic — the
- * visual theme is decided later without touching this file.
+ * Names are role-based (catcher, standard, bonus) and design-agnostic.
+ * The visual theme is decided later without touching this file.
  */
 export const GAME_CONFIG = {
   /** Number of lives a fresh run starts with. */
@@ -21,8 +21,12 @@ export const GAME_CONFIG = {
     maxPosition: 90,
     /** Continuous move speed in percent of width per reference frame (60 fps). */
     moveSpeed: 1.4,
-    /** Horizontal catch tolerance around the catcher center, in percent. */
-    catchHalfWidth: 7,
+    /**
+     * Catcher half-width in percent of field width. Wider on mobile for a
+     * comfortable touch target (the faster mobile pace keeps it challenging).
+     */
+    catchHalfWidthDesktop: 7,
+    catchHalfWidthMobile: 10,
   },
 
   spawn: {
@@ -31,6 +35,8 @@ export const GAME_CONFIG = {
     xMax: 95,
     /** Probability that a spawned object is a bonus object. */
     bonusChance: 0.3,
+    /** Delay before the very first object appears (countdown already warms up). */
+    firstDelayMs: 500,
     /** Minimum horizontal gap between concurrent objects, in percent. */
     minDistanceDesktop: 12,
     minDistanceMobile: 20,
@@ -75,8 +81,12 @@ export const GAME_CONFIG = {
   },
 
   object: {
-    /** Visual + collision width of a falling object, in percent of field width. */
-    widthPercent: 6,
+    /**
+     * Visual + collision width of a falling object, in percent of field width.
+     * Scaled up on mobile to match the larger catcher.
+     */
+    widthPercentDesktop: 6,
+    widthPercentMobile: 8,
   },
 
   controls: {

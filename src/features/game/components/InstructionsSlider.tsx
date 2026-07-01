@@ -10,43 +10,43 @@ interface Slide {
 
 const SLIDES: readonly Slide[] = [
   {
-    title: "So wird gespielt",
+    title: "How to play",
     content: (
       <ul className="flex flex-col gap-3 text-left text-ink-muted">
         <li>
-          Bewege den Fänger mit den Pfeiltasten{" "}
+          Move the catcher with the arrow keys{" "}
           <kbd className="rounded bg-line px-1.5 py-0.5 text-xs text-ink">
             ←
           </kbd>{" "}
           <kbd className="rounded bg-line px-1.5 py-0.5 text-xs text-ink">
             →
           </kbd>{" "}
-          oder per Wischen auf dem Touchscreen.
+          or by swiping on a touchscreen.
         </li>
-        <li>Fange die fallenden Objekte, bevor sie den Boden erreichen.</li>
-        <li>Je höher dein Score, desto schneller wird es.</li>
+        <li>Catch the falling objects before they reach the ground.</li>
+        <li>The higher your score, the faster it gets.</li>
       </ul>
     ),
   },
   {
-    title: "Die Regeln",
+    title: "The rules",
     content: (
       <ul className="flex flex-col gap-3 text-left text-ink-muted">
         <li>
           <span className="font-semibold text-ink">
-            {GAME_CONFIG.points.standard} Punkt
+            {GAME_CONFIG.points.standard} point
           </span>{" "}
-          für ein Standard-Objekt.
+          for a standard object.
         </li>
         <li>
           <span className="font-semibold text-accent">
-            {GAME_CONFIG.points.bonus} Punkte
+            {GAME_CONFIG.points.bonus} points
           </span>{" "}
-          für ein Bonus-Objekt.
+          for a bonus object.
         </li>
         <li>
-          Jedes verpasste Objekt kostet ein Leben — du startest mit{" "}
-          {GAME_CONFIG.livesStart} Leben.
+          Every missed object costs a life — you start with{" "}
+          {GAME_CONFIG.livesStart} lives.
         </li>
       </ul>
     ),
@@ -68,7 +68,7 @@ export function InstructionsSlider({
 
   return (
     <section
-      aria-label="Anleitung"
+      aria-label="Instructions"
       className="animate-fade-in flex h-full flex-col items-center justify-center gap-8 overflow-y-auto px-6 py-8 text-center sm:gap-10"
     >
       <div className="flex flex-col items-center gap-3">
@@ -81,7 +81,7 @@ export function InstructionsSlider({
           Catcher
         </span>
         <span className="text-xs font-medium tracking-[0.3em] text-ink-muted uppercase">
-          Fang, was fällt
+          Catch what falls
         </span>
       </div>
 
@@ -94,7 +94,7 @@ export function InstructionsSlider({
         </div>
 
         <p className="sr-only" aria-live="polite">
-          Schritt {index + 1} von {SLIDES.length}
+          Step {index + 1} of {SLIDES.length}
         </p>
 
         <div className="mt-8 flex items-center justify-between">
@@ -103,7 +103,7 @@ export function InstructionsSlider({
             onClick={() => setIndex((value) => value - 1)}
             disabled={isFirst}
           >
-            Zurück
+            Back
           </Button>
           <ul className="flex gap-2" aria-hidden="true">
             {SLIDES.map((item, dot) => (
@@ -120,13 +120,13 @@ export function InstructionsSlider({
             onClick={() => setIndex((value) => value + 1)}
             disabled={isLast}
           >
-            Weiter
+            Next
           </Button>
         </div>
       </div>
 
       <Button variant="primary" onClick={onStart}>
-        Spiel starten
+        Start game
       </Button>
     </section>
   );

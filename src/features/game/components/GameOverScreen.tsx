@@ -18,28 +18,28 @@ export function GameOverScreen({
   onExit,
 }: GameOverScreenProps): React.JSX.Element {
   return (
-    <ModalDialog title="Game Over" onClose={onExit}>
+    <ModalDialog title="Game over" onClose={onExit}>
       <dl className="mt-6 flex justify-center gap-8 text-sm">
         <div className="flex flex-col gap-1">
-          <dt className="text-ink-muted">Dein Score</dt>
+          <dt className="text-ink-muted">Score</dt>
           <dd className="text-2xl font-semibold tabular-nums">{score}</dd>
         </div>
         <div className="flex flex-col gap-1">
-          <dt className="text-ink-muted">Highscore</dt>
+          <dt className="text-ink-muted">Best</dt>
           <dd className="text-2xl font-semibold tabular-nums">{highscore}</dd>
         </div>
       </dl>
 
       {isNewHighscore && (
-        <p className="mt-4 text-sm font-medium text-accent">Neuer Highscore!</p>
+        <p className="mt-4 text-sm font-medium text-accent">New high score!</p>
       )}
 
       <div className="mt-8 flex flex-col gap-3">
         <Button variant="primary" onClick={onPlayAgain}>
-          Nochmal spielen
+          Play again
         </Button>
         <Button variant="secondary" onClick={onExit}>
-          Zur Startseite
+          Back to start
         </Button>
       </div>
     </ModalDialog>

@@ -148,7 +148,8 @@ describe("catching and missing", () => {
 
   it("catches on body overlap at the reach boundary", () => {
     const reach =
-      GAME_CONFIG.catcher.catchHalfWidth + GAME_CONFIG.object.widthPercent / 2;
+      GAME_CONFIG.catcher.catchHalfWidthDesktop +
+      GAME_CONFIG.object.widthPercentDesktop / 2;
     const atEdge = tick(
       playing({ fallingObjects: [makeObject({ x: 50 + reach })] }),
     );
