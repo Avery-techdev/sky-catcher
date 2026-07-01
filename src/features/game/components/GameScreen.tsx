@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import { GAME_CONFIG } from "@/features/game/constants/gameConfig";
 import { FALLING_OBJECT_TYPE } from "@/features/game/types/game.types";
 import type { FallingObject } from "@/features/game/types/game.types";
@@ -9,15 +10,16 @@ interface GameScreenProps {
   livesTotal: number;
   catcherPosition: number;
   fallingObjects: readonly FallingObject[];
+  fieldRef: RefObject<HTMLDivElement | null>;
   onPause: () => void;
 }
 
 const SHAPE_CLASSES: Record<FallingObject["type"], string> = {
   [FALLING_OBJECT_TYPE.Standard]:
-    "h-7 w-7 rounded-lg bg-ink shadow-[0_6px_14px_-6px_rgba(10,10,10,0.6)]",
+    "h-full w-full rounded-lg bg-ink shadow-[0_6px_14px_-6px_rgba(10,10,10,0.6)]",
   [FALLING_OBJECT_TYPE.Bonus]:
-    "h-6 w-6 rotate-45 rounded-md bg-accent animate-bonus-pulse " +
-    "shadow-[0_0_18px_-2px_var(--color-accent)]",
+    "h-full w-full rounded-full bg-accent ring-2 ring-inset ring-paper/70 " +
+    "shadow-[0_6px_14px_-6px_rgba(59,91,255,0.55)]",
 };
 
 /** Play screen: score/lives HUD, pause control and the animated play field. */
@@ -28,6 +30,7 @@ export function GameScreen({
   livesTotal,
   catcherPosition,
   fallingObjects,
+  fieldRef,
   onPause,
 }: GameScreenProps): React.JSX.Element {
   return (
@@ -89,9 +92,13 @@ export function GameScreen({
       </div>
 
       {/* Decorative animated field — status is conveyed via HUD text below. */}
-      <div className="relative flex-1 overflow-hidden" aria-hidden="true">
+      <div
+        ref={fieldRef}
+        className="relative flex-1 overflow-hidden"
+        aria-hidden="true"
+      >
         <div
-          className="pointer-events-none absolute inset-x-0 bg-gradient-to-b from-transparent to-line/40"
+          className="pointer-events-none absolute inset-x-0 bg-linear-to-b from-transparent to-line/40"
           style={{ top: `${GAME_CONFIG.field.catchLineY}%` }}
         />
         <div
@@ -102,8 +109,12 @@ export function GameScreen({
         {fallingObjects.map((object) => (
           <div
             key={object.id}
-            className="animate-pop-in absolute -translate-x-1/2 -translate-y-1/2"
-            style={{ left: `${object.x}%`, top: `${object.y}%` }}
+            className="animate-pop-in absolute aspect-square -translate-x-1/2 -translate-y-1/2"
+            style={{
+              left: `${object.x}%`,
+              top: `${object.y}%`,
+              width: `${GAME_CONFIG.object.widthPercent}%`,
+            }}
           >
             <div className={SHAPE_CLASSES[object.type]} />
           </div>

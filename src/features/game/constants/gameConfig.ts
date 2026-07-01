@@ -19,8 +19,8 @@ export const GAME_CONFIG = {
     /** Left/right bounds for the catcher center, in percent. */
     minPosition: 10,
     maxPosition: 90,
-    /** Movement per keyboard step, in percent. */
-    moveStep: 5,
+    /** Continuous move speed in percent of width per reference frame (60 fps). */
+    moveSpeed: 1.4,
     /** Horizontal catch tolerance around the catcher center, in percent. */
     catchHalfWidth: 7,
   },
@@ -72,6 +72,16 @@ export const GAME_CONFIG = {
     missLineY: 100,
     /** Vertical start position for spawned objects, in percent (above field). */
     spawnY: -10,
+  },
+
+  object: {
+    /** Visual + collision width of a falling object, in percent of field width. */
+    widthPercent: 6,
+  },
+
+  controls: {
+    /** Repeat interval (ms) for moving the catcher while an arrow is held. */
+    keyboardMoveIntervalMs: 50,
   },
 
   /** Viewport width (px) below which the mobile tuning profile applies. */

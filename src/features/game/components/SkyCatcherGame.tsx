@@ -1,4 +1,6 @@
+import { useRef } from "react";
 import { useGameState } from "@/features/game/hooks/useGameState";
+import { useGameControls } from "@/features/game/hooks/useGameControls";
 import { GAME_CONFIG } from "@/features/game/constants/gameConfig";
 import { GAME_STATUS } from "@/features/game/types/game.types";
 import { InstructionsSlider } from "@/features/game/components/InstructionsSlider";
@@ -23,7 +25,21 @@ export function SkyCatcherGame(): React.JSX.Element {
     resumeGame,
     restartGame,
     resetGame,
+    setCatcherPosition,
+    setCatcherDirection,
+    togglePause,
   } = useGameState();
+
+  const fieldRef = useRef<HTMLDivElement>(null);
+
+  useGameControls({
+    status,
+    fieldRef,
+    setCatcherPosition,
+    setCatcherDirection,
+    startGame,
+    togglePause,
+  });
 
   const isPaused = status === GAME_STATUS.Paused;
   const isPlaying = status === GAME_STATUS.Playing;
@@ -48,6 +64,7 @@ export function SkyCatcherGame(): React.JSX.Element {
                 livesTotal={GAME_CONFIG.livesStart}
                 catcherPosition={catcherPosition}
                 fallingObjects={fallingObjects}
+                fieldRef={fieldRef}
                 onPause={pauseGame}
               />
             </div>

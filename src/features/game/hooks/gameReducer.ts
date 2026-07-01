@@ -18,7 +18,7 @@ export type GameAction =
   | { readonly type: "RESTART" }
   | { readonly type: "RESET" }
   | { readonly type: "SET_CATCHER"; readonly position: number }
-  | { readonly type: "MOVE_CATCHER"; readonly delta: number }
+  | { readonly type: "SET_CATCHER_DIRECTION"; readonly direction: number }
   | { readonly type: "SET_VIEWPORT"; readonly isMobile: boolean }
   | {
       readonly type: "TICK";
@@ -40,6 +40,7 @@ export function createInitialState(
     highscore,
     lives: GAME_CONFIG.livesStart,
     catcherPosition: GAME_CONFIG.catcher.startPosition,
+    catcherDirection: 0,
     fallingObjects: [],
     isMobile,
   };
@@ -87,11 +88,20 @@ function advance(
   dtMs: number,
   spawn: FallingObject | null,
 ): GameState {
-  const { catchHalfWidth } = GAME_CONFIG.catcher;
   const { catchLineY, missLineY } = GAME_CONFIG.field;
   const frames =
     Math.min(dtMs, GAME_CONFIG.maxFrameDeltaMs) / GAME_CONFIG.frameMs;
   const speed = selectGameSpeed(state);
+
+  // Catch on real horizontal overlap: catcher half-width + object half-width.
+  const catchReach =
+    GAME_CONFIG.catcher.catchHalfWidth + GAME_CONFIG.object.widthPercent / 2;
+
+  // Continuous catcher movement, integrated per frame for smooth motion.
+  const catcherPosition = clampCatcherPosition(
+    state.catcherPosition +
+      state.catcherDirection * GAME_CONFIG.catcher.moveSpeed * frames,
+  );
 
   let score = state.score;
   let lives = state.lives;
@@ -100,9 +110,8 @@ function advance(
   for (const object of state.fallingObjects) {
     const y = object.y + speed * frames;
 
-    // Caught: reached the catch line while horizontally aligned with the catcher.
-    const isAligned =
-      Math.abs(object.x - state.catcherPosition) <= catchHalfWidth;
+    // Caught: reached the catch line while its body overlaps the catcher.
+    const isAligned = Math.abs(object.x - catcherPosition) <= catchReach;
     if (y >= catchLineY && isAligned) {
       score += object.points;
       continue;
@@ -129,6 +138,7 @@ function advance(
     score,
     highscore: Math.max(state.highscore, score),
     lives: clampedLives,
+    catcherPosition,
     fallingObjects: remaining,
     status,
   };
@@ -161,15 +171,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         catcherPosition: clampCatcherPosition(action.position),
+        catcherDirection: 0,
       };
 
-    case "MOVE_CATCHER":
-      return {
-        ...state,
-        catcherPosition: clampCatcherPosition(
-          state.catcherPosition + action.delta,
-        ),
-      };
+    case "SET_CATCHER_DIRECTION":
+      return state.catcherDirection === action.direction
+        ? state
+        : { ...state, catcherDirection: action.direction };
 
     case "SET_VIEWPORT":
       return state.isMobile === action.isMobile

@@ -159,9 +159,9 @@ export function useGameState(): UseGameStateResult {
     [],
   );
 
-  const moveCatcher = useCallback(
-    (deltaPercent: number): void =>
-      dispatch({ type: "MOVE_CATCHER", delta: deltaPercent }),
+  const setCatcherDirection = useCallback(
+    (direction: number): void =>
+      dispatch({ type: "SET_CATCHER_DIRECTION", direction }),
     [],
   );
 
@@ -185,6 +185,6 @@ export function useGameState(): UseGameStateResult {
     restartGame,
     resetGame,
     setCatcherPosition,
-    moveCatcher,
+    setCatcherDirection,
   };
 }

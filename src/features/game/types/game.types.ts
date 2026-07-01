@@ -45,6 +45,8 @@ export interface GameState {
   readonly lives: number;
   /** Catcher center in percent of play area width. */
   readonly catcherPosition: number;
+  /** Current horizontal move direction: -1 (left), 0 (idle) or 1 (right). */
+  readonly catcherDirection: number;
   readonly fallingObjects: readonly FallingObject[];
   /** Whether the current viewport uses the mobile tuning profile. */
   readonly isMobile: boolean;
@@ -60,8 +62,8 @@ export interface GameControls {
   readonly resetGame: () => void;
   /** Set the catcher center to an absolute percent (clamped to bounds). */
   readonly setCatcherPosition: (percent: number) => void;
-  /** Move the catcher center by a relative percent (clamped to bounds). */
-  readonly moveCatcher: (deltaPercent: number) => void;
+  /** Set the continuous move direction: -1 (left), 0 (idle) or 1 (right). */
+  readonly setCatcherDirection: (direction: number) => void;
 }
 
 /** Public shape returned by `useGameState`. */
