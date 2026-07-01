@@ -13,6 +13,7 @@ import type {
 /** Actions that drive the game state machine. */
 export type GameAction =
   | { readonly type: "START" }
+  | { readonly type: "BEGIN" }
   | { readonly type: "PAUSE" }
   | { readonly type: "RESUME" }
   | { readonly type: "RESTART" }
@@ -38,6 +39,8 @@ export function createInitialState(
     status: GAME_STATUS.Start,
     score: 0,
     highscore,
+    lastGain: 0,
+    lastCatchId: 0,
     lives: GAME_CONFIG.livesStart,
     catcherPosition: GAME_CONFIG.catcher.startPosition,
     catcherDirection: 0,
@@ -105,6 +108,7 @@ function advance(
 
   let score = state.score;
   let lives = state.lives;
+  let gained = 0;
   const remaining: FallingObject[] = [];
 
   for (const object of state.fallingObjects) {
@@ -114,6 +118,7 @@ function advance(
     const isAligned = Math.abs(object.x - catcherPosition) <= catchReach;
     if (y >= catchLineY && isAligned) {
       score += object.points;
+      gained += object.points;
       continue;
     }
 
@@ -137,6 +142,8 @@ function advance(
     ...state,
     score,
     highscore: Math.max(state.highscore, score),
+    lastGain: gained > 0 ? gained : state.lastGain,
+    lastCatchId: gained > 0 ? state.lastCatchId + 1 : state.lastCatchId,
     lives: clampedLives,
     catcherPosition,
     fallingObjects: remaining,
@@ -151,8 +158,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case "RESTART":
       return {
         ...createInitialState(state.isMobile, state.highscore),
-        status: GAME_STATUS.Playing,
+        status: GAME_STATUS.Countdown,
       };
+
+    case "BEGIN":
+      return state.status === GAME_STATUS.Countdown
+        ? { ...state, status: GAME_STATUS.Playing }
+        : state;
 
     case "RESET":
       return createInitialState(state.isMobile, state.highscore);

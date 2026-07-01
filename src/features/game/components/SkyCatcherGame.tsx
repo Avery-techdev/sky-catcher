@@ -5,6 +5,7 @@ import { GAME_CONFIG } from "@/features/game/constants/gameConfig";
 import { GAME_STATUS } from "@/features/game/types/game.types";
 import { InstructionsSlider } from "@/features/game/components/InstructionsSlider";
 import { GameScreen } from "@/features/game/components/GameScreen";
+import { Countdown } from "@/features/game/components/Countdown";
 import { PauseOverlay } from "@/features/game/components/PauseOverlay";
 import { GameOverScreen } from "@/features/game/components/GameOverScreen";
 
@@ -17,10 +18,13 @@ export function SkyCatcherGame(): React.JSX.Element {
     status,
     score,
     highscore,
+    lastGain,
+    lastCatchId,
     lives,
     catcherPosition,
     fallingObjects,
     startGame,
+    beginPlay,
     pauseGame,
     resumeGame,
     restartGame,
@@ -41,9 +45,11 @@ export function SkyCatcherGame(): React.JSX.Element {
     togglePause,
   });
 
+  const isCountdown = status === GAME_STATUS.Countdown;
   const isPaused = status === GAME_STATUS.Paused;
   const isPlaying = status === GAME_STATUS.Playing;
   const isGameOver = status === GAME_STATUS.GameOver;
+  const isActive = isCountdown || isPlaying || isPaused;
 
   return (
     <div className="flex min-h-dvh items-stretch justify-center bg-paper sm:items-center sm:p-6">
@@ -54,12 +60,14 @@ export function SkyCatcherGame(): React.JSX.Element {
           <InstructionsSlider onStart={startGame} />
         )}
 
-        {(isPlaying || isPaused) && (
+        {isActive && (
           <>
-            <div className="h-full" inert={isPaused}>
+            <div className="h-full" inert={isPaused || isCountdown}>
               <GameScreen
                 score={score}
                 highscore={highscore}
+                lastGain={lastGain}
+                lastCatchId={lastCatchId}
                 lives={lives}
                 livesTotal={GAME_CONFIG.livesStart}
                 catcherPosition={catcherPosition}
@@ -68,6 +76,8 @@ export function SkyCatcherGame(): React.JSX.Element {
                 onPause={pauseGame}
               />
             </div>
+
+            {isCountdown && <Countdown onComplete={beginPlay} />}
 
             {isPaused && (
               <PauseOverlay

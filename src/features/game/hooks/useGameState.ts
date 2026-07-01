@@ -136,6 +136,7 @@ export function useGameState(): UseGameStateResult {
   }, [state.highscore]);
 
   const startGame = useCallback((): void => dispatch({ type: "START" }), []);
+  const beginPlay = useCallback((): void => dispatch({ type: "BEGIN" }), []);
   const pauseGame = useCallback((): void => dispatch({ type: "PAUSE" }), []);
   const resumeGame = useCallback((): void => dispatch({ type: "RESUME" }), []);
   const restartGame = useCallback(
@@ -173,12 +174,15 @@ export function useGameState(): UseGameStateResult {
     status: state.status,
     score: state.score,
     highscore: state.highscore,
+    lastGain: state.lastGain,
+    lastCatchId: state.lastCatchId,
     lives: state.lives,
     catcherPosition: state.catcherPosition,
     fallingObjects: state.fallingObjects,
     gameSpeed,
     spawnInterval,
     startGame,
+    beginPlay,
     pauseGame,
     resumeGame,
     togglePause,

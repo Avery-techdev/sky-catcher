@@ -6,6 +6,8 @@ import type { FallingObject } from "@/features/game/types/game.types";
 interface GameScreenProps {
   score: number;
   highscore: number;
+  lastGain: number;
+  lastCatchId: number;
   lives: number;
   livesTotal: number;
   catcherPosition: number;
@@ -26,6 +28,8 @@ const SHAPE_CLASSES: Record<FallingObject["type"], string> = {
 export function GameScreen({
   score,
   highscore,
+  lastGain,
+  lastCatchId,
   lives,
   livesTotal,
   catcherPosition,
@@ -44,7 +48,18 @@ export function GameScreen({
             <dt className="text-[0.65rem] font-medium tracking-[0.2em] text-ink-muted uppercase">
               Punkte
             </dt>
-            <dd className="text-2xl font-semibold tabular-nums">{score}</dd>
+            <dd className="relative w-fit text-2xl font-semibold tabular-nums">
+              {score}
+              {lastCatchId > 0 && (
+                <span
+                  key={lastCatchId}
+                  aria-hidden="true"
+                  className="animate-score-gain pointer-events-none absolute top-0 left-full ml-1.5 text-base font-semibold text-accent"
+                >
+                  +{lastGain}
+                </span>
+              )}
+            </dd>
           </div>
           <div className="flex flex-col">
             <dt className="text-[0.65rem] font-medium tracking-[0.2em] text-ink-muted uppercase">

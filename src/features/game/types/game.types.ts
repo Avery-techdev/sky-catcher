@@ -9,6 +9,7 @@
 /** High-level phase the game is currently in. */
 export const GAME_STATUS = {
   Start: "start",
+  Countdown: "countdown",
   Playing: "playing",
   Paused: "paused",
   GameOver: "gameOver",
@@ -42,6 +43,10 @@ export interface GameState {
   readonly score: number;
   /** Best score across runs; persisted via the storage service. */
   readonly highscore: number;
+  /** Points gained on the most recent catch (for transient feedback). */
+  readonly lastGain: number;
+  /** Monotonic id incremented on every catch (feedback animation key). */
+  readonly lastCatchId: number;
   readonly lives: number;
   /** Catcher center in percent of play area width. */
   readonly catcherPosition: number;
@@ -55,6 +60,8 @@ export interface GameState {
 /** Imperative controls exposed by the game hook. */
 export interface GameControls {
   readonly startGame: () => void;
+  /** Leave the countdown phase and begin play. */
+  readonly beginPlay: () => void;
   readonly pauseGame: () => void;
   readonly resumeGame: () => void;
   readonly togglePause: () => void;
@@ -72,6 +79,8 @@ export interface UseGameStateResult extends GameControls {
   readonly score: number;
   /** Best score persisted across runs (via the storage service). */
   readonly highscore: number;
+  readonly lastGain: number;
+  readonly lastCatchId: number;
   readonly lives: number;
   readonly catcherPosition: number;
   readonly fallingObjects: readonly FallingObject[];

@@ -55,12 +55,22 @@ describe("createInitialState", () => {
 });
 
 describe("state machine", () => {
-  it("START enters playing and preserves the highscore", () => {
+  it("START enters the countdown and preserves the highscore", () => {
     const state = createInitialState(false, 7);
     const next = gameReducer(state, { type: "START" });
-    expect(next.status).toBe(GAME_STATUS.Playing);
+    expect(next.status).toBe(GAME_STATUS.Countdown);
     expect(next.score).toBe(0);
     expect(next.highscore).toBe(7);
+  });
+
+  it("BEGIN moves from countdown to playing", () => {
+    const countdown = gameReducer(createInitialState(false), { type: "START" });
+    expect(gameReducer(countdown, { type: "BEGIN" }).status).toBe(
+      GAME_STATUS.Playing,
+    );
+    // BEGIN is a no-op outside the countdown.
+    const start = createInitialState(false);
+    expect(gameReducer(start, { type: "BEGIN" })).toBe(start);
   });
 
   it("RESET returns to start and preserves the highscore", () => {
@@ -121,6 +131,8 @@ describe("catching and missing", () => {
     const next = tick(playing({ fallingObjects: [makeObject({ x: 50 })] }));
     expect(next.score).toBe(GAME_CONFIG.points.standard);
     expect(next.fallingObjects).toHaveLength(0);
+    expect(next.lastGain).toBe(GAME_CONFIG.points.standard);
+    expect(next.lastCatchId).toBe(1);
   });
 
   it("awards bonus points for a bonus object", () => {
