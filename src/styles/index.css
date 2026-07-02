@@ -11,7 +11,16 @@
   --color-ink: #0a0a0a;
   --color-ink-muted: #6b7280;
   --color-line: #e5e5e5;
-  --color-accent: #3b5bff;
+  --color-accent: #ff6b35;
+
+  /* Sunset play world: sun at the horizon below, sky opening up to light. */
+  --color-sky-top: #ffd4a0;
+  --color-sky-mid: #ff8c42;
+  --color-sky-bottom: #ff4500;
+  --color-object-standard: #2d1b69;
+  --color-object-bonus: #fff9e6;
+  --color-catcher: #1a0a2e;
+  --color-ui-text: #3d0d00;
 
   --font-sans:
     "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
@@ -108,7 +117,7 @@
   }
   100% {
     opacity: 1;
-    color: var(--color-ink);
+    color: var(--color-ui-text);
   }
 }
 

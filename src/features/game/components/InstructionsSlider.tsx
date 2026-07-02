@@ -73,6 +73,11 @@ export function InstructionsSlider({
     <section
       aria-label="Instructions"
       className="animate-fade-in relative flex h-full flex-col items-center justify-center gap-8 overflow-y-auto px-6 py-8 text-center sm:gap-10"
+      style={{
+        // A faint warm wash hinting at the sunset play world, kept subtle.
+        background:
+          "linear-gradient(to top, #fff1e6 0%, #fff9f4 45%, #ffffff 100%)",
+      }}
     >
       <AmbientBackdrop />
 

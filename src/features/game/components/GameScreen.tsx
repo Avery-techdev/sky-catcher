@@ -18,12 +18,13 @@ interface GameScreenProps {
   onPause: () => void;
 }
 
-// The visible shape is exactly the collision area — no outer shadow/halo. The
-// bonus glows from within via an inset ring that stays inside the circle edge.
+// Falling embers against the evening sky. The bonus circle carries a soft gold
+// glow that is purely decorative — collision uses the object body only, so the
+// glow never widens the hitbox.
 const SHAPE_CLASSES: Record<FallingObject["type"], string> = {
-  [FALLING_OBJECT_TYPE.Standard]: "h-full w-full rounded-xl bg-ink",
+  [FALLING_OBJECT_TYPE.Standard]: "h-full w-full rounded-xl bg-object-standard",
   [FALLING_OBJECT_TYPE.Bonus]:
-    "h-full w-full rounded-full bg-accent ring-2 ring-inset ring-paper/70",
+    "h-full w-full rounded-full bg-object-bonus shadow-[0_0_10px_rgba(255,249,230,0.6)]",
 };
 
 /** Play screen: score/lives HUD, pause control and the animated play field. */
@@ -47,22 +48,20 @@ export function GameScreen({
   return (
     <section
       aria-label="Game"
-      className="animate-fade-in flex h-full flex-col"
+      className="animate-fade-in relative flex h-full flex-col"
       style={{
-        background: [
-          "radial-gradient(130% 90% at 50% -15%, rgba(59, 91, 255, 0.08) 0%, transparent 55%)",
-          "radial-gradient(90% 70% at 50% 118%, rgba(10, 10, 10, 0.06) 0%, transparent 62%)",
-          "linear-gradient(180deg, #fbfbfc 0%, #f4f5f7 45%, #eceef1 100%)",
-        ].join(", "),
+        // Soft sunset: gentle warm horizon fading to near-white high in the sky.
+        background:
+          "linear-gradient(to top, #ffa552 0%, #ffc584 32%, #ffdcb8 62%, #ffeed8 82%, #fff8f0 100%)",
       }}
     >
       <div className="flex items-center justify-between gap-4 px-5 py-4">
         <dl className="flex gap-7">
           <div className="flex flex-col">
-            <dt className="text-[0.65rem] font-medium tracking-[0.2em] text-ink-muted uppercase">
+            <dt className="text-[0.65rem] font-medium tracking-[0.2em] text-ui-text/70 uppercase">
               Score
             </dt>
-            <dd className="relative w-fit text-2xl font-semibold tabular-nums">
+            <dd className="relative w-fit text-2xl font-semibold tabular-nums text-ui-text">
               <span
                 key={`score-${score}`}
                 className="animate-score-fade inline-block"
@@ -81,10 +80,10 @@ export function GameScreen({
             </dd>
           </div>
           <div className="flex flex-col">
-            <dt className="text-[0.65rem] font-medium tracking-[0.2em] text-ink-muted uppercase">
+            <dt className="text-[0.65rem] font-medium tracking-[0.2em] text-ui-text/70 uppercase">
               Best
             </dt>
-            <dd className="text-2xl font-semibold tabular-nums text-ink-muted">
+            <dd className="text-2xl font-semibold tabular-nums text-ui-text/70">
               {highscore}
             </dd>
           </div>
@@ -94,7 +93,7 @@ export function GameScreen({
           <div className="flex flex-col items-end">
             <span
               aria-hidden="true"
-              className="text-[0.65rem] font-medium tracking-[0.2em] text-ink-muted uppercase"
+              className="text-[0.65rem] font-medium tracking-[0.2em] text-ui-text/70 uppercase"
             >
               Lives
             </span>
@@ -107,7 +106,9 @@ export function GameScreen({
                   key={`life-${index}`}
                   aria-hidden="true"
                   className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
-                    index < lives ? "scale-100 bg-accent" : "scale-50 bg-line"
+                    index < lives
+                      ? "scale-100 bg-accent"
+                      : "scale-50 bg-ui-text/25"
                   }`}
                 />
               ))}
@@ -118,7 +119,7 @@ export function GameScreen({
             type="button"
             onClick={onPause}
             aria-label="Pause"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-all hover:-translate-y-0.5 hover:border-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-ui-text/25 text-ui-text transition-all hover:-translate-y-0.5 hover:border-ui-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-sky-bottom"
           >
             <svg
               viewBox="0 0 24 24"
@@ -140,11 +141,11 @@ export function GameScreen({
         aria-hidden="true"
       >
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-line/25"
+          className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-ui-text/15"
           style={{ top: `${GAME_CONFIG.field.catchLineY}%` }}
         />
         <div
-          className="pointer-events-none absolute inset-x-0 h-px bg-linear-to-r from-transparent via-line to-transparent"
+          className="pointer-events-none absolute inset-x-0 h-px bg-linear-to-r from-transparent via-ui-text/30 to-transparent"
           style={{ top: `${GAME_CONFIG.field.catchLineY}%` }}
         />
 
@@ -163,27 +164,28 @@ export function GameScreen({
         ))}
 
         <div
-          className="absolute flex h-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full"
+          className="bg-catcher absolute flex h-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full"
           style={{
             left: `${catcherPosition}%`,
             top: `${GAME_CONFIG.field.catchLineY}%`,
             width: `${catcherWidth}%`,
-            background: "linear-gradient(to bottom, #333333, #111111)",
           }}
         >
-          <span className="h-2.5 w-0.5 rounded-full bg-canvas/70" />
+          <span className="h-2.5 w-0.5 rounded-full bg-white/80" />
         </div>
 
         {lastCatchId > 0 && (
           <span
             key={`catch-${lastCatchId}`}
             aria-hidden="true"
-            className="animate-catch-flash pointer-events-none absolute rounded-full bg-accent"
+            className="animate-catch-flash pointer-events-none absolute rounded-full"
             style={{
               left: `${catcherPosition}%`,
               top: `${GAME_CONFIG.field.catchLineY}%`,
               width: strongFlash ? 56 : 32,
               height: strongFlash ? 56 : 32,
+              background:
+                "radial-gradient(circle, rgba(255, 215, 0, 0.9) 0%, rgba(255, 107, 53, 0.55) 55%, transparent 75%)",
             }}
           />
         )}

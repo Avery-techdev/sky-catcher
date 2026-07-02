@@ -9,7 +9,7 @@ interface PauseOverlayProps {
   onExit: () => void;
 }
 
-/** Modal shown while the game is paused. */
+/** Modal shown while the game is paused, on the warm start-screen surface. */
 export function PauseOverlay({
   score,
   highscore,
@@ -18,15 +18,19 @@ export function PauseOverlay({
   onExit,
 }: PauseOverlayProps): React.JSX.Element {
   return (
-    <ModalDialog title="Paused" onClose={onResume}>
+    <ModalDialog title="Paused" onClose={onResume} variant="sunset">
       <dl className="mt-6 flex justify-center gap-8 text-sm">
         <div className="flex flex-col gap-1">
-          <dt className="text-ink-muted">Score</dt>
-          <dd className="text-2xl font-semibold tabular-nums">{score}</dd>
+          <dt className="text-ui-text/60">Score</dt>
+          <dd className="text-2xl font-semibold tabular-nums text-ui-text">
+            {score}
+          </dd>
         </div>
         <div className="flex flex-col gap-1">
-          <dt className="text-ink-muted">Best</dt>
-          <dd className="text-2xl font-semibold tabular-nums">{highscore}</dd>
+          <dt className="text-ui-text/60">Best</dt>
+          <dd className="text-2xl font-semibold tabular-nums text-ui-text">
+            {highscore}
+          </dd>
         </div>
       </dl>
 
