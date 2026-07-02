@@ -6,7 +6,9 @@ Built as a front-end showcase with **React 19**, **TypeScript**, **Vite** and **
 
 **[▶ Play the live demo](https://sky-catcher.vercel.app)** · [Source on GitHub](https://github.com/Avery-techdev/sky-catcher)
 
-<!-- Add a screenshot or GIF here once deployed: ![Sky-Catcher](docs/preview.png) -->
+<p align="center">
+  <img src="docs/preview.png" alt="Sky-Catcher start screen: the Sky·Catcher wordmark above a How-to-play card and a Start game button" width="720" />
+</p>
 
 ---
 

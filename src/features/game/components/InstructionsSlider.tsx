@@ -91,7 +91,7 @@ export function InstructionsSlider({
       </div>
 
       <div className="relative z-10 w-full max-w-md rounded-3xl border border-line bg-paper p-8 shadow-[0_30px_70px_-50px_rgba(10,10,10,0.35)]">
-        <div key={index} className="animate-rise-in">
+        <div key={index} className="animate-rise-in min-h-68 sm:min-h-54">
           <h2 className="text-xl font-semibold tracking-tight">
             {slide.title}
           </h2>
