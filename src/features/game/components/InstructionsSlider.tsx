@@ -5,6 +5,7 @@ import { Button } from "@/features/game/components/Button";
 import { AmbientBackdrop } from "@/features/game/components/AmbientBackdrop";
 
 const REPO_URL = "https://github.com/Avery-techdev/sky-catcher";
+const PORTFOLIO_URL = "https://ah-development.de/";
 
 interface Slide {
   readonly title: string;
@@ -142,7 +143,18 @@ export function InstructionsSlider({
       </div>
 
       <div className="relative z-10 flex flex-col items-center gap-1">
-        <span className="text-sm text-ink-muted">by Avery Hauschild</span>
+        <span className="text-sm text-ink-muted">
+          by{" "}
+          <a
+            href={PORTFOLIO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Avery Hauschild — portfolio (opens in a new tab)"
+            className="rounded font-medium text-ink underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:outline-none"
+          >
+            Avery Hauschild
+          </a>
+        </span>
         <a
           href={REPO_URL}
           target="_blank"
