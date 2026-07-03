@@ -50,9 +50,9 @@ export function GameScreen({
       aria-label="Game"
       className="animate-fade-in relative flex h-full flex-col"
       style={{
-        // Soft sunset: gentle warm horizon fading to near-white high in the sky.
+        // Evening sky: warm horizon fading through cream into a faint blue up high.
         background:
-          "linear-gradient(to top, #ffa552 0%, #ffc584 32%, #ffdcb8 62%, #ffeed8 82%, #fff8f0 100%)",
+          "linear-gradient(to top, #ffa552 0%, #ffc584 30%, #ffddba 56%, #fbe6d8 78%, #e3edf7 100%)",
       }}
     >
       <div className="flex items-center justify-between gap-4 px-5 py-4">
