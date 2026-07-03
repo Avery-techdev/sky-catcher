@@ -167,6 +167,14 @@
 
 :root {
   color-scheme: light;
+
+  /* Faint warm wash shared by the start screen and the pause surface. */
+  --gradient-sky-wash: linear-gradient(
+    to top,
+    #fff1e6 0%,
+    #fff9f4 45%,
+    #ffffff 100%
+  );
 }
 
 html,

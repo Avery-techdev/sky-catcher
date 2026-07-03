@@ -89,8 +89,7 @@ export function ModalDialog({
   const panelStyle: CSSProperties = isSunset
     ? {
         // Same faint warm wash as the start screen.
-        background:
-          "linear-gradient(to top, #fff1e6 0%, #fff9f4 45%, #ffffff 100%)",
+        background: "var(--gradient-sky-wash)",
       }
     : {
         background: "radial-gradient(ellipse at top, #ffffff 0%, #f4f4f4 100%)",
